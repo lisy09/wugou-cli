@@ -1,0 +1,14 @@
+{
+  "filePath": ".spec-workflow/specs/new-auth-type-openai-compatible/requirements.md",
+  "currentVersion": 1,
+  "snapshots": [
+    {
+      "version": 1,
+      "filename": "snapshot-001.json",
+      "timestamp": "2025-09-26T07:51:28.869Z",
+      "trigger": "initial",
+      "approvalId": "approval_1758873088866_xifdbe4dt",
+      "approvalTitle": "Requirements for OpenAI-compatible authentication type"
+    }
+  ]
+}
