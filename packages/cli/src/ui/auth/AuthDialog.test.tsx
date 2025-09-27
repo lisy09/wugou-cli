@@ -121,6 +121,21 @@ describe('AuthDialog', () => {
     expect(items[0].value).toBe(AuthType.USE_GEMINI);
   });
 
+  it('includes OpenAI Compatible option in auth types', () => {
+    renderWithProviders(<AuthDialog {...props} />);
+    const items = mockedRadioButtonSelect.mock.calls[0][0].items;
+    const openaiOption = items.find((item: { value: string; label: string }) => item.value === AuthType.USE_OPENAI_COMPATIBLE);
+    expect(openaiOption).toBeDefined();
+    expect(openaiOption?.label).toBe('OpenAI Compatible');
+  });
+
+  it('selects initial auth type from settings for OpenAI Compatible', () => {
+    props.settings.merged.security!.auth!.selectedType = AuthType.USE_OPENAI_COMPATIBLE;
+    renderWithProviders(<AuthDialog {...props} />);
+    const { items, initialIndex } = mockedRadioButtonSelect.mock.calls[0][0];
+    expect(items[initialIndex].value).toBe(AuthType.USE_OPENAI_COMPATIBLE);
+  });
+
   it('sets initial index to 0 when enforcedType is set', () => {
     props.settings.merged.security!.auth!.enforcedType = AuthType.USE_GEMINI;
     renderWithProviders(<AuthDialog {...props} />);

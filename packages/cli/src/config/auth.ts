@@ -8,7 +8,8 @@ import { AuthType } from '@google/gemini-cli-core';
 import { loadEnvironment, loadSettings } from './settings.js';
 
 export function validateAuthMethod(authMethod: string): string | null {
-  loadEnvironment(loadSettings().merged);
+  const settings = loadSettings(process.cwd()).merged;
+  loadEnvironment(settings);
   if (
     authMethod === AuthType.LOGIN_WITH_GOOGLE ||
     authMethod === AuthType.CLOUD_SHELL
@@ -36,6 +37,26 @@ export function validateAuthMethod(authMethod: string): string | null {
         'Update your environment and try again (no reload needed if using .env)!'
       );
     }
+    return null;
+  }
+
+  if (authMethod === AuthType.USE_OPENAI_COMPATIBLE) {
+    // Check settings first, then fall back to environment variables
+    const openaiApiKey = settings?.security?.auth?.openaiApiKey || process.env['OPENAI_API_KEY'];
+    const openaiBaseUrl = settings?.security?.auth?.openaiBaseUrl || process.env['OPENAI_BASE_URL'];
+    
+    if (!openaiApiKey) {
+      return 'OPENAI_API_KEY environment variable not found. Add that to your environment and try again (no reload needed if using .env)!';
+    }
+    
+    if (openaiBaseUrl) {
+      try {
+        new URL(openaiBaseUrl);
+      } catch {
+        return 'OPENAI_BASE_URL must be a valid URL format. Update your environment and try again!';
+      }
+    }
+    
     return null;
   }
 

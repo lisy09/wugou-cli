@@ -49,7 +49,48 @@ Gemini CLI requires you to authenticate with Google's AI services. On initial st
 
         :warning: Be advised that when you export your API key inside your shell configuration file, any other process executed from the shell can read it.
 
-3.  **Vertex AI:**
+3.  **<a id="openai-compatible"></a>OpenAI Compatible:**
+    - Use this option to connect to any OpenAI-compatible API service, including OpenAI, Azure OpenAI, or self-hosted models.
+    - **Required Configuration:**
+      - Set the `OPENAI_API_KEY` environment variable with your API key
+      - Optionally set `OPENAI_BASE_URL` to customize the API endpoint (defaults to OpenAI's standard endpoint)
+      - Optionally set `OPENAI_MODEL_NAME` to specify which model to use (e.g., `gpt-3.5-turbo`, `gpt-4`)
+    - **Configuration Methods:**
+      - **Environment Variables (temporary):**
+        ```bash
+        export OPENAI_API_KEY="your-api-key"
+        export OPENAI_BASE_URL="https://api.openai.com/v1"  # Optional
+        export OPENAI_MODEL_NAME="gpt-3.5-turbo"  # Optional
+        ```
+      - **Settings File (persistent):**
+        Add to your `.gemini/settings.json`:
+        ```json
+        {
+          "security": {
+            "auth": {
+              "selectedType": "openai-compatible",
+              "openaiApiKey": "your-api-key",
+              "openaiBaseUrl": "https://api.openai.com/v1",
+              "openaiModelName": "gpt-3.5-turbo"
+            }
+          }
+        }
+        ```
+      - **Environment File (persistent):**
+        Add to your `.gemini/.env`:
+        ```
+        OPENAI_API_KEY="your-api-key"
+        OPENAI_BASE_URL="https://api.openai.com/v1"
+        OPENAI_MODEL_NAME="gpt-3.5-turbo"
+        ```
+    - **Popular Services:**
+      - **OpenAI:** Use `https://api.openai.com/v1` as base URL
+      - **Azure OpenAI:** Use your Azure OpenAI endpoint URL
+      - **Local Models:** Use `http://localhost:11434/v1` for Ollama, `http://localhost:8080/v1` for other local services
+    - **Model Support:** Any model that supports the OpenAI API format
+    - **Security Note:** Your API key is stored securely and never transmitted to Google services when using OpenAI-compatible authentication
+
+4.  **Vertex AI:**
     - **API Key:**
       - Obtain your Google Cloud API key: [Get an API Key](https://cloud.google.com/vertex-ai/generative-ai/docs/start/api-keys?usertype=newuser)
       - Set the `GOOGLE_API_KEY` environment variable. In the following methods, replace `YOUR_GOOGLE_API_KEY` with your Vertex AI API key:
@@ -113,7 +154,7 @@ Gemini CLI requires you to authenticate with Google's AI services. On initial st
             source ~/.bashrc
             ```
 
-4.  **Cloud Shell:**
+5.  **Cloud Shell:**
     - This option is only available when running in a Google Cloud Shell environment.
     - It automatically uses the credentials of the logged-in user in the Cloud Shell environment.
     - This is the default authentication method when running in Cloud Shell and no other method is configured.
@@ -156,7 +197,7 @@ GEMINI_API_KEY="your-gemini-api-key"
 EOF
 ```
 
-## Non-Interactive Mode / Headless Environments
+### Non-Interactive Mode / Headless Environments
 
 When running the Gemini CLI in a non-interactive environment, you cannot use the interactive login flow.
 Instead, you must configure authentication using environment variables.
@@ -164,11 +205,17 @@ Instead, you must configure authentication using environment variables.
 The CLI will automatically detect if it is running in a non-interactive terminal and will use one of the
 following authentication methods if available:
 
-1.  **Gemini API Key:**
+1.  **OpenAI Compatible:**
+    - Set the `OPENAI_API_KEY` environment variable.
+    - Optionally set `OPENAI_BASE_URL` to customize the API endpoint.
+    - Optionally set `OPENAI_MODEL_NAME` to specify the model.
+    - The CLI will use these settings to authenticate with OpenAI-compatible services.
+
+2.  **Gemini API Key:**
     - Set the `GEMINI_API_KEY` environment variable.
     - The CLI will use this key to authenticate with the Gemini API.
 
-2.  **Vertex AI:**
+3.  **Vertex AI:**
     - Set the `GOOGLE_GENAI_USE_VERTEXAI=true` environment variable.
     - **Using an API Key:** Set the `GOOGLE_API_KEY` environment variable.
     - **Using Application Default Credentials (ADC):**

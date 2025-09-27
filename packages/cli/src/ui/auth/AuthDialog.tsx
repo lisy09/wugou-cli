@@ -54,6 +54,7 @@ export function AuthDialog({
       value: AuthType.USE_GEMINI,
     },
     { label: 'Vertex AI', value: AuthType.USE_VERTEX_AI },
+    { label: 'OpenAI Compatible', value: AuthType.USE_OPENAI_COMPATIBLE },
   ];
 
   if (settings.merged.security?.auth?.enforcedType) {
